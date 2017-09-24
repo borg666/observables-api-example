@@ -20,10 +20,10 @@ public class ApiClient {
                             httpResponse: httpResponse,
                             apiRequest: apiRequest)
                     } else {
-                        observer.onError(
-                            BookingBugError.network(NetworkErrorDetail(
+                        let errorDetail: NetworkErrorDetail = NetworkErrorDetail(
                             statusCode: HttpStatusCode.undefined.rawValue,
-                            serverMessage: httpResponse.error.debugDescription)))
+                            serverMessage: httpResponse.error.debugDescription)
+                        observer.onError(ApiError.network(errorDetail))
                     }
                     return Disposables.create()
                 }
@@ -41,15 +41,15 @@ public class ApiClient {
             observer.onNext(apiResponse)
             observer.onCompleted()
         } else if apiResponse.hasClientError() {
-            observer.onError(BookingBugError.client(NetworkErrorDetail(
+            observer.onError(ApiError.client(NetworkErrorDetail(
                 statusCode: httpStatusCode,
                 serverMessage: httpResponse.error.debugDescription)))
         } else if apiResponse.hasServerError() {
-            observer.onError(BookingBugError.server(NetworkErrorDetail(
+            observer.onError(ApiError.server(NetworkErrorDetail(
                 statusCode: httpStatusCode,
                 serverMessage: httpResponse.error.debugDescription)))
         } else {
-            observer.onError(BookingBugError.unknown(NetworkErrorDetail(
+            observer.onError(ApiError.unknown(NetworkErrorDetail(
                 statusCode: httpStatusCode,
                 serverMessage: httpResponse.error.debugDescription)))
         }

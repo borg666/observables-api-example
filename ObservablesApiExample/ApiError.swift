@@ -38,7 +38,7 @@ protocol NetworkErrorDetailable {
     var detail: NetworkErrorDetail { get }
 }
 
-public enum BookingBugError: NetworkErrorDetailable, Error {
+public enum ApiError: NetworkErrorDetailable, Error {
 
     case network(NetworkErrorDetail)
     case server(NetworkErrorDetail)
