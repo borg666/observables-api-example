@@ -3,7 +3,7 @@ import SwiftyJSON
 open class ApiResponse {
 
     public private(set) var resource: BaseResource?
-    public private(set) var httpStatusCode: HttpStatusCode?
+    public private(set) var httpStatusCode: HttpStatusCode = HttpStatusCode.undefined
 
     private init() {
     }
@@ -27,23 +27,37 @@ open class ApiResponse {
     }
 
     private func hasData(withData data: Data?) -> Bool  {
-        if let data = data, data.count > 0 {
+        if let data: Data = data, data.count > 0 {
             return true
         }
         return false
     }
 
     public func hasClientError() -> Bool {
-        if let httpStatusCode: HttpStatusCode = self.httpStatusCode {
-            return HttpStatusCode.clientErrorsGroup.contains(httpStatusCode.rawValue)
-        }
-        return false
+        return HttpStatusCode.clientErrorsGroup.contains(httpStatusCode.rawValue)
     }
 
     public func hasServerError() -> Bool {
-        if let httpStatusCode: HttpStatusCode = self.httpStatusCode {
-            return HttpStatusCode.serverErrorsGroup.contains(httpStatusCode.rawValue)
+        return HttpStatusCode.serverErrorsGroup.contains(httpStatusCode.rawValue)
+    }
+
+    private func serverErrorMessage() -> String {
+        return resource?.serverErrorMessage ?? ""
+    }
+
+    public func createApiErrorOnFail() -> ApiError {
+        if hasClientError() {
+            return ApiError.client(NetworkErrorDetail(
+                statusCode: httpStatusCode.rawValue,
+                serverMessage: serverErrorMessage()))
+        } else if hasServerError() {
+            return ApiError.server(NetworkErrorDetail(
+                statusCode: httpStatusCode.rawValue,
+                serverMessage: serverErrorMessage()))
+        } else {
+            return ApiError.unknown(NetworkErrorDetail(
+                statusCode: httpStatusCode.rawValue,
+                serverMessage: serverErrorMessage()))
         }
-        return false
     }
 }
