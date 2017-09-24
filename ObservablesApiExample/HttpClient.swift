@@ -4,6 +4,7 @@ import RxSwift
 public class HttpClient {
 
     public init() {
+        Alamofire.htt
     }
 
     public func request(urlRequest: URLRequestConvertible) -> Observable<HttpResponse> {

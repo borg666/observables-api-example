@@ -21,7 +21,10 @@ public struct NetworkErrorDetail: Equatable {
         self.serverMessage = serverMessage
     }
 
-    fileprivate init(type: NetworkErrorDetailType, statusCode: Int, message: String, defaultMessage: String) {
+    fileprivate init(
+        type: NetworkErrorDetailType,
+        statusCode: Int, message: String,
+        defaultMessage: String) {
         self.type = type
         self.statusCode = statusCode
         self.serverMessage = message
@@ -61,20 +64,23 @@ public enum ApiError: NetworkErrorDetailable, Error {
                 message: errorDetail.serverMessage,
                 defaultMessage: "Something is not working, it is our fault!")
         case .client(let errorDetail):
-            return NetworkErrorDetail(type: NetworkErrorDetailType.client,
-                                      statusCode: errorDetail.statusCode,
-                                      message: errorDetail.serverMessage,
-                                      defaultMessage: "Request error")
+            return NetworkErrorDetail(
+                type: NetworkErrorDetailType.client,
+                statusCode: errorDetail.statusCode,
+                message: errorDetail.serverMessage,
+                defaultMessage: "Request error")
         case .invalidCredentials(let errorDetail):
-            return NetworkErrorDetail(type: NetworkErrorDetailType.invalidCredentials,
-                                      statusCode: errorDetail.statusCode,
-                                      message: errorDetail.serverMessage,
-                                      defaultMessage: "Invalid email or password!")
+            return NetworkErrorDetail(
+                type: NetworkErrorDetailType.invalidCredentials,
+                statusCode: errorDetail.statusCode,
+                message: errorDetail.serverMessage,
+                defaultMessage: "Invalid email or password!")
         case .unknown(let errorDetail):
-            return NetworkErrorDetail(type: NetworkErrorDetailType.unknown,
-                                      statusCode: errorDetail.statusCode,
-                                      message: errorDetail.serverMessage,
-                                      defaultMessage: "Something went wrong, please try again!")
+            return NetworkErrorDetail(
+                type: NetworkErrorDetailType.unknown,
+                statusCode: errorDetail.statusCode,
+                message: errorDetail.serverMessage,
+                defaultMessage: "Something went wrong, please try again!")
         }
     }
 }
