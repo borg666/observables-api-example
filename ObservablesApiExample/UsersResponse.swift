@@ -7,9 +7,7 @@ public class UsersResponse: ApiResponse {
     }
 
     public override func isSuccess() -> Bool {
-        if let _ = self.resource as? UsersResource,
-            let httpStatusCode = self.httpStatusCode,
-            httpStatusCode == HttpStatusCode.ok {
+        if let _ = self.resource as? UsersResource, httpStatusCode == HttpStatusCode.ok {
             return true
         }
         return false

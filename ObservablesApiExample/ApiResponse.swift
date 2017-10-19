@@ -10,7 +10,8 @@ open class ApiResponse {
 
     public required init<RESOURCE: BaseResource>(resourceType: RESOURCE.Type, httpResponse: HttpResponse) {
         self.resource = createResourceOrReturnNil(resourceType: resourceType, data: httpResponse.data)
-        self.httpStatusCode = HttpStatusCode.findOrReturnUndefined(statusCode:httpResponse.response?.statusCode)
+        self.httpStatusCode = HttpStatusCode.findOrReturnUndefined(statusCode: httpResponse.response?.statusCode)
+        print("httpResponse.response?.statusCode=\(httpResponse.response?.statusCode)")
     }
 
     open func isSuccess() throws -> Bool {
@@ -47,17 +48,18 @@ open class ApiResponse {
 
     public func createApiErrorOnFail() -> ApiError {
         if hasClientError() {
-            return ApiError.client(NetworkErrorDetail(
+            return ApiError.client(ApiErrorDetail(
                 statusCode: httpStatusCode.rawValue,
                 serverMessage: serverErrorMessage()))
         } else if hasServerError() {
-            return ApiError.server(NetworkErrorDetail(
+            return ApiError.server(ApiErrorDetail(
                 statusCode: httpStatusCode.rawValue,
                 serverMessage: serverErrorMessage()))
         } else {
-            return ApiError.unknown(NetworkErrorDetail(
+            return ApiError.unknown(ApiErrorDetail(
                 statusCode: httpStatusCode.rawValue,
                 serverMessage: serverErrorMessage()))
         }
     }
+
 }

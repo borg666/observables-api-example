@@ -1,6 +1,6 @@
 import SwiftyJSON
 
-public protocol BaseResource {
+public protocol BaseResource: Codable {
 
     var serverErrorMessage: String { get set }
 

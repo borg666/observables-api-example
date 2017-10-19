@@ -1,7 +1,7 @@
 import Alamofire
 import SwiftyJSON
 
-public protocol ApiRequest:  URLRequestConvertible {
+public protocol ApiRequest {
 
     func asURLRequest() throws -> URLRequest
 
@@ -22,8 +22,11 @@ public protocol ApiRequest:  URLRequestConvertible {
 extension ApiRequest {
 
     public func asURLRequest() throws -> URLRequest {
-        let url: URL = URL(string: getHttpRequestUrl())!
-        var urlRequest: URLRequest = URLRequest(url: url)
+        let url: URL? = URL(string: getHttpRequestUrl())!
+        if url == nil {
+            throw ClassError.invalidArgument
+        }
+        var urlRequest: URLRequest = URLRequest(url: url!)
         urlRequest.cachePolicy = URLRequest.CachePolicy.reloadIgnoringLocalCacheData
         urlRequest.timeoutInterval = 30.0
         urlRequest.httpMethod = getHttpMethod().rawValue

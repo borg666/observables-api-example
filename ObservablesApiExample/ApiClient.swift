@@ -10,7 +10,7 @@ public class ApiClient {
     }
     
     public func request(with apiRequest: ApiRequest) -> Observable<ApiResponse> {
-        return httpClient.request(urlRequest: apiRequest)
+        return httpClient.request(urlRequest: try! apiRequest.asURLRequest())
             .flatMap { httpResponse in
                 return Observable<ApiResponse>.create { observer  in
                     if httpResponse.error == nil {
@@ -22,7 +22,7 @@ public class ApiClient {
                             observer.onError(apiResponse.createApiErrorOnFail())
                         }
                     } else {
-                        let errorDetail: NetworkErrorDetail = NetworkErrorDetail(
+                        let errorDetail: ApiErrorDetail = ApiErrorDetail(
                             statusCode: HttpStatusCode.undefined.rawValue,
                             serverMessage: httpResponse.error.debugDescription)
                         observer.onError(ApiError.network(errorDetail))
